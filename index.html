@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apostila Semana 10: Eventos e DOM Dinâmico</title>
+
+  <!-- Seu CSS existente -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Icones & highlight (mantidos do seu modelo) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" />
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero-header">
+    <div class="hero-content">
+      <img src="image/ifes-vertical-branco.png" alt="Logo IFES" class="hero-logo" />
+      <h1>JavaScript em Ação: Eventos e DOM Dinâmico</h1>
+      <p class="subtitle">Apostila da Semana 10 | Da Teoria Fundamental à Prática de Mercado</p>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav" aria-label="Sumário">
+        <h3>Sumário</h3>
+        <ul>
+          <li><a class="nav-link active" href="#objetivos"><i class="fa-solid fa-bullseye"></i> Objetivos</a></li>
+          <li><a class="nav-link" href="#dom"><i class="fa-solid fa-sitemap"></i> O DOM e Seletores</a></li>
+          <li><a class="nav-link" href="#listeners"><i class="fa-solid fa-wand-magic-sparkles"></i> addEventListener</a></li>
+          <li><a class="nav-link" href="#ciclo-evento"><i class="fa-solid fa-rotate"></i> Ciclo de Vida do Evento</a></li>
+          <li><a class="nav-link" href="#catalogo-eventos"><i class="fa-solid fa-mouse-pointer"></i> Catálogo de Eventos</a></li>
+          <li><a class="nav-link" href="#manipulacao-dom"><i class="fa-solid fa-paint-brush"></i> Manipulação: classList</a></li>
+          <li><a class="nav-link" href="#seguranca"><i class="fa-solid fa-shield-halved"></i> Segurança: innerHTML</a></li>
+          <li><a class="nav-link" href="#boas-praticas"><i class="fa-solid fa-star"></i> Práticas de Mercado</a></li>
+          <li><a class="nav-link" href="#delegacao"><i class="fa-solid fa-diagram-project"></i> Delegação de Eventos</a></li>
+          <li><a class="nav-link" href="#estudo-de-caso"><i class="fa-solid fa-file-lines"></i> Estudo de Caso (Form)</a></li>
+          <li><a class="nav-link" href="#recursos"><i class="fa-solid fa-book-open"></i> Recursos</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="content">
+      <!-- 1. Objetivos -->
+      <section id="objetivos" class="content-section">
+        <h2>1. Objetivos da Semana</h2>
+        <p>Nesta semana, evoluímos de páginas estáticas para experiências interativas. Você vai “ouvir” ações do usuário e reagir a elas com segurança, acessibilidade e organização.</p>
+        <ul>
+          <li><strong>Dominar o fluxo de eventos:</strong> o que acontece quando o usuário clica, digita ou navega.</li>
+          <li><strong>Aplicar padrões de mercado:</strong> <code>classList</code>, delegação de eventos, a11y e separação de responsabilidades.</li>
+          <li><strong>SoC (Separation of Concerns):</strong> HTML para estrutura, CSS para estilo, JS para comportamento.</li>
+          <li><strong>Estudo de caso:</strong> validar o formulário da Incubadora com <code>submit</code> + <code>preventDefault</code>.</li>
+        </ul>
+      </section>
+
+      <!-- 2. DOM & Seletores -->
+      <section id="dom" class="content-section">
+        <h2> 2. Revisão Essencial: O DOM e Seletores</h2>
+        <h3>2.1 O que é o DOM?</h3>
+        <p>É a estrutura em memória do navegador que representa o HTML. O JS manipula o DOM; o navegador atualiza a tela.</p>
+
+        <h3>2.2 Selecionando Elementos</h3>
+        <ul>
+          <li><code>getElementById('id')</code> — rápido e direto para 1 elemento.</li>
+          <li><code>querySelector('seletor-css')</code> — flexível (pega o primeiro que casar com o seletor).</li>
+        </ul>
+
+        <h4>Exemplo: Seletores</h4>
+        <p id="ex-dom-texto" class="box dashed">Este é o parágrafo (id="ex-dom-texto").</p>
+        <div class="row gap">
+          <button id="ex-dom-btn-id" class="challenge-button" type="button">Testar getElementById</button>
+          <button id="ex-dom-btn-query" class="challenge-button" type="button">Testar querySelector</button>
+        </div>
+        <pre><code class="language-javascript">// Seletores
+const p = document.getElementById('ex-dom-texto');
+const btnQuery = document.querySelector('.challenge-button');</code></pre>
+      </section>
+
+      <!-- 3. addEventListener -->
+      <section id="listeners" class="content-section">
+        <h2> 3. O Método Moderno: <code>addEventListener</code></h2>
+        <div class="highlight-box warning">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <div>
+            <strong>Evite:</strong> <code>onclick="..."</code> no HTML e <code>element.onclick = ...</code> no JS (só 1 função). Use <code>addEventListener</code>.
+          </div>
+        </div>
+        <div class="highlight-box success">
+          <i class="fa-solid fa-circle-check"></i>
+          <div>
+            <strong>Prefira:</strong> múltiplos ouvintes com <code>addEventListener</code>, HTML limpo e mais controle.
+          </div>
+        </div>
+
+        <h4>Exemplo: Múltiplos Listeners</h4>
+        <p>Este botão tem dois listeners: um muda o texto; outro registra no console (abra F12).</p>
+        <button id="ex-multi-listener-btn" class="challenge-button" type="button">Testar Múltiplos Listeners</button>
+      </section>
+
+      <!-- 4. Ciclo de vida do evento -->
+      <section id="ciclo-evento" class="content-section">
+        <h2> 4. O Ciclo de Vida do Evento (Aprofundado)</h2>
+        <p>Três fases: Captura (descendo), Alvo (no elemento) e Propagação (Subindo/Bubbling).</p>
+
+        <h3>4.1 Objeto <code>event</code></h3>
+        <ul>
+          <li><code>event.target</code>: quem iniciou o evento.</li>
+          <li><code>event.currentTarget</code>: quem está ouvindo (onde você anexou o listener).</li>
+        </ul>
+
+        <h3>4.2 <code>preventDefault()</code> e 4.3 <code>stopPropagation()</code></h3>
+        <p><code>preventDefault</code> cancela a ação padrão (ex.: envio do form). <code>stopPropagation</code> interrompe a subida (bubbling).</p>
+
+        <h4>Exemplo prático: Bubbling, Target e StopPropagation</h4>
+        <div id="ex-ciclo-pai" class="panel parent clickable">
+          <strong>PAI (id="ex-ciclo-pai")</strong>
+          <div id="ex-ciclo-filho" class="panel child">
+            <strong>FILHO (id="ex-ciclo-filho")</strong>
+            <button id="ex-ciclo-stop-btn" class="challenge-button" type="button">Botão (com stopPropagation)</button>
+          </div>
+        </div>
+        <div class="form-container">
+          <strong>Log de Eventos:</strong>
+          <pre id="ex-ciclo-log" class="log"></pre>
+        </div>
+      </section>
+
+      <!-- 5. Catálogo -->
+      <section id="catalogo-eventos" class="content-section">
+        <h2>5. Catálogo de Eventos Essenciais</h2>
+        <ul>
+          <li><strong>Mouse:</strong> <code>click</code>, <code>mouseenter</code>, <code>mouseleave</code>.</li>
+          <li><strong>Teclado:</strong> <code>keydown</code>, <code>keyup</code>, <code>input</code>.</li>
+          <li><strong>Formulário:</strong> <code>submit</code>, <code>focus</code>, <code>blur</code>.</li>
+        </ul>
+
+        <h4>Exemplo prático</h4>
+        <div class="form-container">
+          <div class="form-group">
+            <label for="ex-catalogo-input">Teste focus/blur/keydown/input:</label>
+            <input id="ex-catalogo-input" type="text" placeholder="Digite aqui..." />
+          </div>
+          <div class="form-group">
+            <div id="ex-catalogo-hover" class="hover-box">Passe o mouse (mouseenter/leave)</div>
+          </div>
+          <strong>Log:</strong>
+          <span id="ex-catalogo-log" class="mensagem sucesso">Aguardando eventos...</span>
+        </div>
+      </section>
+
+      <!-- 6. classList + textContent x innerHTML -->
+      <section id="manipulacao-dom" class="content-section">
+        <h2>6. Manipulação: a prática correta (<code>classList</code>)</h2>
+
+        <div class="highlight-box warning">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <div><strong>Evite</strong> alterar estilos via <code>.style</code> no JS; prefira classes (SoC).</div>
+        </div>
+
+        <div class="highlight-box success">
+          <i class="fa-solid fa-circle-check"></i>
+          <div>
+            <strong>Use <code>classList</code>:</strong> <code>add</code>, <code>remove</code>, <code>toggle</code>, <code>contains</code>.
+          </div>
+        </div>
+
+        <h4>Exemplo: Alternar estado (modo “ativo”)</h4>
+        <div class="row gap">
+          <span id="ex-tema-status" class="mensagem">Modo: Normal</span>
+          <button id="ex-tema-btn" class="challenge-button" type="button" aria-pressed="false">Alternar</button>
+        </div>
+
+        <h4>textContent × innerHTML</h4>
+        <div class="form-container">
+          <label for="ex-xss-input">Entrada do usuário</label>
+          <input id="ex-xss-input" type="text" placeholder="Ex.: &lt;b&gt;negrito&lt;/b&gt;" />
+          <div class="row gap">
+            <button id="ex-xss-btn-text" class="challenge-button" type="button">Usar textContent (seguro)</button>
+            <button id="ex-xss-btn-html" class="challenge-button" type="button">Usar innerHTML (risco)</button>
+          </div>
+          <h4>Saída:</h4>
+          <div id="ex-xss-output" class="output-box"></div>
+        </div>
+      </section>
+
+      <!-- 8. Boas práticas -->
+      <section id="boas-praticas" class="content-section">
+        <h2>8. Práticas de Mercado: <code>this</code> & Acessibilidade</h2>
+
+        <h3>8.1 <code>this</code> em eventos</h3>
+        <ul>
+          <li><strong>Função tradicional:</strong> <code>this</code> se refere ao elemento (<code>currentTarget</code>).</li>
+          <li><strong>Arrow function:</strong> <code>this</code> é léxico (use <code>event.currentTarget</code>).</li>
+        </ul>
+        <div class="row gap">
+          <button id="ex-this-trad" class="challenge-button" type="button">Função Tradicional</button>
+          <button id="ex-this-arrow" class="challenge-button" type="button">Arrow Function</button>
+        </div>
+        <p>Abra o console (F12) para ver os logs.</p>
+
+        <h3>8.2 Acessibilidade (a11y)</h3>
+        <ul>
+          <li>Prefira elementos semânticos (<code>&lt;button&gt;</code>, <code>&lt;a&gt;</code>).</li>
+          <li>Se usar <code>&lt;div&gt;</code> como botão, adicione <code>role="button"</code> e <code>tabindex="0"</code> e trate Enter/Espaço.</li>
+          <li>Use <code>aria-live</code> para feedback dinâmico.</li>
+        </ul>
+
+        <h4>Exemplo: “botão” em &lt;div&gt; com teclado</h4>
+        <div id="ex-a11y-btn" class="challenge-button" role="button" tabindex="0" aria-pressed="false">Eu sou um &lt;div&gt; acessível</div>
+      </section>
+
+      <!-- 9. Delegação -->
+      <section id="delegacao" class="content-section">
+        <h2> 9. Padrão de Performance: Delegação de Eventos</h2>
+        <p>Coloque um listener no <strong>pai</strong> (ex.: <code>&lt;ul&gt;</code>) e trate os cliques dos <code>&lt;li&gt;</code>/<code>&lt;button&gt;</code> internos com <code>event.target</code> ou <code>closest()</code>.</p>
+
+        <div class="form-container">
+          <label for="ex-deleg-input">Nova Tarefa:</label>
+          <input id="ex-deleg-input" type="text" placeholder="Ex.: Estudar Delegação de Eventos" />
+          <button id="ex-deleg-add-btn" class="challenge-button" type="button">Adicionar</button>
+
+          <h4>Tarefas:</h4>
+          <ul id="deleg-lista" class="list clean">
+            <li>
+              <span>Estudar HTML</span>
+              <button class="delete-btn" data-acao="remover" type="button">Remover</button>
+            </li>
+            <li>
+              <span>Estudar CSS</span>
+              <button class="delete-btn" data-acao="remover" type="button">Remover</button>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 10. Estudo de caso -->
+      <section id="estudo-de-caso" class="content-section">
+        <h2></i> 10. Estudo de Caso: Formulário da Incubadora</h2>
+        <p>Validação simples com <code>submit</code> + <code>preventDefault</code> e feedback textual. Foque o primeiro erro.</p>
+
+        <div class="form-container">
+          <h3>Formulário de Demonstração</h3>
+          <form id="form-contato" novalidate>
+            <div class="form-group">
+              <label for="nome">Nome Completo:</label>
+              <input id="nome" name="nome" type="text" required />
+            </div>
+            <div class="form-group">
+              <label for="email">E-mail:</label>
+              <input id="email" name="email" type="email" required />
+            </div>
+            <button type="submit" class="challenge-button">Enviar Cadastro</button>
+          </form>
+          <p id="mensagem-feedback" class="mensagem" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <!-- 11. Recursos -->
+      <section id="recursos" class="content-section">
+        <h2>11. Recursos e Referências</h2>
+        <ul>
+          <li><a href="https://developer.mozilla.org/pt-BR/docs/Web/API/EventTarget/addEventListener" target="_blank" rel="noreferrer">MDN - addEventListener</a></li>
+          <li><a href="https://developer.mozilla.org/pt-BR/docs/Web/API/Element/classList" target="_blank" rel="noreferrer">MDN - classList</a></li>
+          <li><a href="https://javascript.info/event-delegation" target="_blank" rel="noreferrer">JavaScript.info - Delegação de Eventos</a></li>
+          <li><a href="https://web.dev/learn/accessibility/" target="_blank" rel="noreferrer">web.dev (Google) - Acessibilidade</a></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2025 Ifes Campus de Alegre | Desenvolvido por Prof. Cleziel Franzoni da Costa</p>
+  </footer>
+
+  <!-- Prism -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+
+  <!-- Seu JS separado -->å
+  <script src="js/script.js"></script>
+</body>
+</html>
